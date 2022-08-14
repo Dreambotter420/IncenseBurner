@@ -34,7 +34,6 @@ public class API {
 	public static int minute = 0;
 	public static Timer runTimer;
 	public static Timer incenseTimer;
-	public static long incenseTimerLimit;
 	public static void randomAFK()
 	{
 		int tmp = API.rand2.nextInt(40000);

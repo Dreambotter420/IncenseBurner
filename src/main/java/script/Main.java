@@ -1,12 +1,12 @@
 package script;
 
-import org.dreambot.api.Client;
 import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
 import org.dreambot.api.script.listener.ChatListener;
+import org.dreambot.api.utilities.Timer;
 import org.dreambot.api.wrappers.widgets.message.Message;
 
 import script.behaviour.FullInvy;
@@ -16,7 +16,6 @@ import script.behaviour.TimeoutLeaf;
 import script.framework.Tree;
 import script.fullInvy.EnterPortal;
 import script.fullInvy.LightIncenses;
-import script.idling.Idling;
 import script.initialization.Initialize;
 import script.notfullinvy.ExitPortal;
 import script.notfullinvy.UsePhials;
@@ -40,7 +39,11 @@ public class Main extends AbstractScript implements PaintInfo, ChatListener
     @Override
     public void onStart(String[] args)
     {
-        onStart();
+        for(String arg : args)
+        {
+        	API.hostName = arg;
+        }
+    	onStart();
     }
 
     private void instantiateTree()
@@ -89,7 +92,8 @@ public class Main extends AbstractScript implements PaintInfo, ChatListener
                 getManifest().name() + " V" + getManifest().version() + " by Dreambotter420 ^_^",
                 "Current Branch: " + API.currentBranch,
                 "Current Leaf: " + API.currentLeaf,
-                API.incenseTimer != null ? "Time since last light " + API.incenseTimer.formatTime() : "No incenses lit"
+                API.incenseTimer != null ? "Time since last light " + Timer.formatTime(API.incenseTimer.elapsed()) : "No incenses lit",
+                API.incenseTimer != null ? "Time until next light " + Timer.formatTime(API.incenseTimer.remaining()) : "No incenses lit"
         };
     }
 
