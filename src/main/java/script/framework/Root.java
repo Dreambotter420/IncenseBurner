@@ -7,7 +7,8 @@ package script.framework;
  */
 public class Root extends Branch
 {
-    @Override
+
+	@Override
     public boolean isValid()
     {
         return true;

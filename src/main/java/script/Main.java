@@ -1,7 +1,6 @@
 package script;
 
 import org.dreambot.api.methods.MethodProvider;
-import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
@@ -10,13 +9,13 @@ import org.dreambot.api.utilities.Timer;
 import org.dreambot.api.wrappers.widgets.message.Message;
 
 import script.behaviour.FullInvy;
-import script.behaviour.InitializeScriptStuff;
+import script.behaviour.Initialize;
 import script.behaviour.NotFullInvy;
 import script.behaviour.TimeoutLeaf;
+import script.behaviour.WaitForLogged_N_Loaded;
 import script.framework.Tree;
 import script.fullInvy.EnterPortal;
 import script.fullInvy.LightIncenses;
-import script.initialization.Initialize;
 import script.notfullinvy.ExitPortal;
 import script.notfullinvy.UsePhials;
 import script.paint.CustomPaint;
@@ -26,7 +25,7 @@ import script.utilities.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 
-@ScriptManifest(name = "IncenseLighter", author = "Dreambotter420", version = 0.1, category = Category.MISC)
+@ScriptManifest(name = "IncenseLighter", author = "Dreambotter420", version = 1.1, category = Category.MISC)
 public class Main extends AbstractScript implements PaintInfo, ChatListener
 {
 	@Override
@@ -48,14 +47,18 @@ public class Main extends AbstractScript implements PaintInfo, ChatListener
 
     private void instantiateTree()
     {
-    	tree.addBranches(new InitializeScriptStuff().addLeafs(new Initialize()));
-        tree.addBranches(new FullInvy().addLeafs(
-    			new EnterPortal(),
-    			new LightIncenses()));
-        tree.addBranches(new NotFullInvy().addLeafs(
-    			new ExitPortal(),
-    			new UsePhials()));
-    	tree.addBranches(new TimeoutLeaf());
+    	tree.addBranches(
+    			new WaitForLogged_N_Loaded(),
+    			new p(),
+    			new Initialize(),
+    			new FullInvy().addLeafs(
+    	    			new EnterPortal(),
+    	    			new LightIncenses()),
+    			new NotFullInvy().addLeafs(
+    	    			new ExitPortal(),
+    	    			new UsePhials()),
+    			new TimeoutLeaf()
+    			);
     }
     public final Tree tree = new Tree();
 
@@ -68,7 +71,7 @@ public class Main extends AbstractScript implements PaintInfo, ChatListener
     @Override
     public void onMessage(Message msg)
     {
-    	if(msg.getUsername().equals(Players.localPlayer().getName()))
+    	if(msg.getUsername().equals(p.l.getName()))
     	{
     		MethodProvider.log("See our own msg: " + msg.getMessage());
     		if(msg.getMessage().toLowerCase().startsWith("host "))
@@ -79,7 +82,7 @@ public class Main extends AbstractScript implements PaintInfo, ChatListener
     	}
     	if(msg.getMessage().contains("That player is offline, or has privacy mode enabled"))
     	{
-    		MethodProvider.log("Removing host name due to offline / privacy mode: " +API.hostName);
+    		MethodProvider.log("Removing host name due to offline or privacy mode: " +API.hostName);
     		API.hostName = "";
     	}
     }
@@ -90,13 +93,13 @@ public class Main extends AbstractScript implements PaintInfo, ChatListener
     {
     	return new String[] {
                 getManifest().name() + " V" + getManifest().version() + " by Dreambotter420 ^_^",
-                "Current Branch: " + API.currentBranch,
-                "Current Leaf: " + API.currentLeaf,
+                "Current task: " + currentTask,
                 API.incenseTimer != null ? "Time since last light " + Timer.formatTime(API.incenseTimer.elapsed()) : "No incenses lit",
                 API.incenseTimer != null ? "Time until next light " + Timer.formatTime(API.incenseTimer.remaining()) : "No incenses lit"
         };
     }
-
+    public static String currentTask = "";
+	
     // Instantiate the paint object. This can be customized to your liking.
     private final CustomPaint CUSTOM_PAINT = new CustomPaint(this,
             CustomPaint.PaintLocations.BOTTOM_LEFT_PLAY_SCREEN,

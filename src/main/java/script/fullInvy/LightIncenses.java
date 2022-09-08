@@ -4,7 +4,6 @@ import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.filter.Filter;
 import org.dreambot.api.methods.interactive.GameObjects;
-import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.methods.map.Map;
 import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.methods.skills.Skill;
@@ -13,6 +12,8 @@ import org.dreambot.api.methods.walking.impl.Walking;
 import org.dreambot.api.utilities.Timer;
 import org.dreambot.api.wrappers.interactive.GameObject;
 
+import script.Main;
+import script.p;
 import script.framework.Leaf;
 import script.utilities.API;
 import script.utilities.Locations;
@@ -93,6 +94,7 @@ public class LightIncenses extends Leaf {
     		
     		if(!lit1)
     		{
+    			Main.currentTask = "~Lighting incense #1~";
     			String action = "Light";
         		if(closestBurner.hasAction("Re-light")) action = "Re-light";
         		
@@ -103,8 +105,8 @@ public class LightIncenses extends Leaf {
         			if(randTimerLimit >= maxTimeLimit) randTimerLimit = maxTimeLimit;
         				
         			API.incenseTimer = new Timer(randTimerLimit);
-        			MethodProvider.sleepUntil(() -> !Players.localPlayer().isMoving() &&
-        					!Players.localPlayer().isAnimating(), Sleep.Calculate(3000,1111));
+        			MethodProvider.sleepUntil(() -> !p.l.isMoving() &&
+        					!p.l.isAnimating(), Sleep.Calculate(3000,1111));
         			Sleep.sleep(420,555);
         			lit1 = true;
         		}
@@ -113,13 +115,14 @@ public class LightIncenses extends Leaf {
     		
     		if(!lit2)
     		{
+    			Main.currentTask = "~Lighting incense #2~";
     			String action = "Light";
         		if(secondBurner.hasAction("Re-light")) action = "Re-light";
         		if(secondBurner.interact(action)) {
         			lit2 = true;
         			MethodProvider.sleep((int) Calculations.nextGaussianRandom(1300,100));
-        			MethodProvider.sleepUntil(() -> !Players.localPlayer().isMoving() &&
-        					!Players.localPlayer().isAnimating(), Sleep.Calculate(3000,1111));
+        			MethodProvider.sleepUntil(() -> !p.l.isMoving() &&
+        					!p.l.isAnimating(), Sleep.Calculate(3000,1111));
         			Sleep.sleep(111,555);
         		}
         		Sleep.sleep(50,1111);
@@ -127,9 +130,54 @@ public class LightIncenses extends Leaf {
     		}
     		
     	}
-    	
-    	Tile standTile = new Tile(burner1.getX(),burner1.getY()+1,Players.localPlayer().getZ());
-    	if(!Players.localPlayer().getTile().equals(standTile)) Map.interact(standTile);
+    	//time to search for nearest rug and portal relative to altar, do maths, stand on tile next to altar that is both closest to rug and portal, but rug 1st priority
+    	//to stand on top of usual players finding least distance from portal -> altar
+    	GameObject altar = GameObjects.closest(g-> g!=null && g.getName().equals("Altar") && g.hasAction("Pray"));
+    	int portalDistFromTile1 = 99;
+    	int portalDistFromTile2 = 99;
+    	Tile carpetTile1 = null;
+    	Tile carpetTile2 = null;
+    	Tile standTile = new Tile(burner1.getX(),burner1.getY()+1,p.l.getZ());
+    	boolean tile2 = false;
+    	for(Tile t : altar.getObjectTiles())
+    	{
+    		GameObject closestRug = GameObjects.closest(g -> g!=null && g.getName().equals("Rug") && g.distance(t) <= 3, t);
+    		//revert to default standtile if no rugs found
+    		if(closestRug == null)
+    		{
+    			if(!p.l.getTile().equals(standTile))
+    	    	{
+    	    		Main.currentTask = "~Walking to idle tile~";
+    	    		if(p.l.isMoving()) return Sleep.Calculate(500,1111);
+    	    		Walking.clickTileOnMinimap(standTile);
+    	    	}
+	    		return Sleep.Calculate(500,1111);
+    		}
+    		if(!tile2) 
+    		{
+    			carpetTile1 = closestRug.getTile();
+    			tile2 = true;
+    		}
+    		else carpetTile2 = closestRug.getTile();
+    	}
+    	GameObject portal = GameObjects.closest(g -> g!=null && g.getName().equals("Portal") && 
+    			g.hasAction("Enter") && 
+    			g.hasAction("Lock") && 
+    			g.hasAction("Remove board advert"));
+
+    	portalDistFromTile1 =(int) portal.distance(carpetTile1);
+    	portalDistFromTile2 =(int) portal.distance(carpetTile2);
+    	if(portalDistFromTile1 == portalDistFromTile2) standTile = carpetTile1;
+    	else if(portalDistFromTile1 >= portalDistFromTile2) standTile = carpetTile2;
+    	else standTile = carpetTile1;
+    	if(!p.l.getTile().equals(standTile))
+    	{
+    		Main.currentTask = "~Walking to idle tile~";
+    		if(p.l.isMoving()) return Sleep.Calculate(500,1111);
+    		Walking.clickTileOnMinimap(standTile);
+    		return Sleep.Calculate(500,1111);
+    	}
+    	Main.currentTask = "~Sitting on ass~";
     	Sleep.sleep(500,1111);
     	return 5;
     }

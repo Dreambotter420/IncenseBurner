@@ -5,11 +5,13 @@ import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.dialogues.Dialogues;
 import org.dreambot.api.methods.input.Keyboard;
 import org.dreambot.api.methods.interactive.NPCs;
-import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.methods.walking.impl.Walking;
 import org.dreambot.api.methods.widget.Widgets;
 import org.dreambot.api.wrappers.interactive.NPC;
 import org.dreambot.api.wrappers.items.Item;
+
+import script.Main;
+import script.p;
 import script.framework.Leaf;
 import script.utilities.API;
 import script.utilities.Locations;
@@ -19,7 +21,7 @@ public class UsePhials extends Leaf {
 
     @Override
     public boolean isValid() {
-    	return Locations.rimmington.contains(Players.localPlayer());
+    	return Locations.rimmington.contains(p.l);
     }
 
     @Override
@@ -45,6 +47,7 @@ public class UsePhials extends Leaf {
     			Widgets.getWidgetChild(219, 1, 1).getText().contains("Exchange")) 
     	{ //have at least one option to exchange items, check for "all" and if none, choose "1"
     		//have at least one option to exchange items, check for "all" and if none, choose "1"
+    		Main.currentTask = "~Typing options~";
     		if(!Dialogues.chooseFirstOptionContaining("Exchange All:")) Keyboard.type("1",false);
     		return Sleep.Calculate(420,696);
     	}
@@ -52,17 +55,19 @@ public class UsePhials extends Leaf {
     	NPC phials = NPCs.closest("Phials");
     	if(phials != null)
     	{
-    		if(!Players.localPlayer().isInteracting(phials))
+    		Main.currentTask = "~Using noted on phials~";
+    		if(!p.l.isInteracting(phials))
     		{
         		Item marrentillNoted = Inventory.get(API.MARRENTILL_NOTED);
         		if(marrentillNoted.useOn(phials))
     			{
-    				MethodProvider.sleepUntil(Dialogues::inDialogue, () -> Players.localPlayer().isMoving(), Sleep.Calculate(2222,2222), 50);
+    				MethodProvider.sleepUntil(Dialogues::inDialogue, () -> p.l.isMoving(), Sleep.Calculate(2222,2222), 50);
     			}
     		}
     	}
     	else
     	{
+    		Main.currentTask = "~Walking to phials~";
 			if(Walking.shouldWalk(6) && Walking.walk(Locations.rimmington.getCenter())) Sleep.sleep(420,1111);
     	}
     	Sleep.sleep(100,444);

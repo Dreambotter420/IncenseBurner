@@ -1,6 +1,7 @@
 package script.behaviour;
 
 import script.framework.Leaf;
+import script.utilities.Sleep;
 
 /**
  * @author LostVirt
@@ -18,6 +19,6 @@ public class TimeoutLeaf extends Leaf
 
     @Override
     public int onLoop() {
-        return 0;
+        return Sleep.Calculate(111,420);
     }
 }
