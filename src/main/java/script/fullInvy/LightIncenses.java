@@ -1,14 +1,13 @@
 package script.fullInvy;
 
 import org.dreambot.api.methods.Calculations;
-import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.filter.Filter;
 import org.dreambot.api.methods.interactive.GameObjects;
-import org.dreambot.api.methods.map.Map;
 import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.methods.walking.impl.Walking;
+import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Timer;
 import org.dreambot.api.wrappers.interactive.GameObject;
 
@@ -68,12 +67,12 @@ public class LightIncenses extends Leaf {
         		}
         		if(closestBurner == null || secondBurner == null) 
         		{
-        			MethodProvider.log("Not a pair of incenses found in instanced area (house)!");
-        			return Sleep.Calculate(5555,5555);
+        			Logger.log("Not a pair of incenses found in instanced area (house)!");
+        			return Sleep.calculate(5555,5555);
         		}
         		burner1 = closestBurner.getTile();
         		burner2 = secondBurner.getTile();
-        		return Sleep.Calculate(69,69);
+        		return Sleep.calculate(69,69);
     		}
     		
     		GameObject closestBurner = GameObjects.closest("Incense burner");
@@ -88,8 +87,8 @@ public class LightIncenses extends Leaf {
     		}
     		if(closestBurner == null || secondBurner == null) 
     		{
-    			MethodProvider.log("Not a pair of incenses found in instanced area (house)!");
-    			return Sleep.Calculate(5555,5555);
+    			Logger.log("Not a pair of incenses found in instanced area (house)!");
+    			return Sleep.calculate(5555,5555);
     		}
     		
     		if(!lit1)
@@ -99,18 +98,18 @@ public class LightIncenses extends Leaf {
         		if(closestBurner.hasAction("Re-light")) action = "Re-light";
         		
         		if(closestBurner.interact(action)) {
-        			MethodProvider.sleep((int) Calculations.nextGaussianRandom(1300,100));
+        			org.dreambot.api.utilities.Sleep.sleep((int) Calculations.nextGaussianRandom(1300,100));
         			long maxTimeLimit = ((long) ((Skills.getRealLevel(Skill.FIREMAKING) + 200) * 0.6 * 1000)) - 10000;
         			long randTimerLimit = (long) Calculations.nextGaussianRandom(((Skills.getRealLevel(Skill.FIREMAKING)/2) + 200) * 0.6 * 1000, Skills.getRealLevel(Skill.FIREMAKING)/3);
         			if(randTimerLimit >= maxTimeLimit) randTimerLimit = maxTimeLimit;
         				
         			API.incenseTimer = new Timer(randTimerLimit);
-        			MethodProvider.sleepUntil(() -> !p.l.isMoving() &&
-        					!p.l.isAnimating(), Sleep.Calculate(3000,1111));
+        			org.dreambot.api.utilities.Sleep.sleepUntil(() -> !p.l.isMoving() &&
+        					!p.l.isAnimating(), Sleep.calculate(3000,1111));
         			Sleep.sleep(420,555);
         			lit1 = true;
         		}
-        		return Sleep.Calculate(420,696);
+        		return Sleep.calculate(420,696);
     		}
     		
     		if(!lit2)
@@ -120,13 +119,13 @@ public class LightIncenses extends Leaf {
         		if(secondBurner.hasAction("Re-light")) action = "Re-light";
         		if(secondBurner.interact(action)) {
         			lit2 = true;
-        			MethodProvider.sleep((int) Calculations.nextGaussianRandom(1300,100));
-        			MethodProvider.sleepUntil(() -> !p.l.isMoving() &&
-        					!p.l.isAnimating(), Sleep.Calculate(3000,1111));
+        			org.dreambot.api.utilities.Sleep.sleep((int) Calculations.nextGaussianRandom(1300,100));
+        			org.dreambot.api.utilities.Sleep.sleepUntil(() -> !p.l.isMoving() &&
+        					!p.l.isAnimating(), Sleep.calculate(3000,1111));
         			Sleep.sleep(111,555);
         		}
         		Sleep.sleep(50,1111);
-        		return Sleep.Calculate(420,696);
+        		return Sleep.calculate(420,696);
     		}
     		
     	}
@@ -148,10 +147,10 @@ public class LightIncenses extends Leaf {
     			if(!p.l.getTile().equals(standTile))
     	    	{
     	    		Main.currentTask = "~Walking to idle tile~";
-    	    		if(p.l.isMoving()) return Sleep.Calculate(500,1111);
+    	    		if(p.l.isMoving()) return Sleep.calculate(500,1111);
     	    		Walking.clickTileOnMinimap(standTile);
     	    	}
-	    		return Sleep.Calculate(500,1111);
+	    		return Sleep.calculate(500,1111);
     		}
     		if(!tile2) 
     		{
@@ -173,9 +172,9 @@ public class LightIncenses extends Leaf {
     	if(!p.l.getTile().equals(standTile))
     	{
     		Main.currentTask = "~Walking to idle tile~";
-    		if(p.l.isMoving()) return Sleep.Calculate(500,1111);
+    		if(p.l.isMoving()) return Sleep.calculate(500,1111);
     		Walking.clickTileOnMinimap(standTile);
-    		return Sleep.Calculate(500,1111);
+    		return Sleep.calculate(500,1111);
     	}
     	Main.currentTask = "~Sitting on ass~";
     	Sleep.sleep(500,1111);

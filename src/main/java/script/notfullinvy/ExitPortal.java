@@ -1,6 +1,5 @@
 package script.notfullinvy;
 
-import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.interactive.GameObjects;
 
@@ -23,11 +22,11 @@ public class ExitPortal extends Leaf {
     	
     	Main.currentTask = "~Exiting POH~";
     	API.randomAFK();
-    	if(p.l.isMoving()) return Sleep.Calculate(111,420);
+    	if(p.l.isMoving()) return Sleep.calculate(111,420);
     	if(GameObjects.closest("Portal").interact("Enter")) 
     	{
     		Sleep.sleep(55,696);
-    		if(Sleep.Calculate(1, 100) < 300) 
+    		if(Sleep.calculate(1, 100) < 300) 
     		{
     			if(Inventory.isItemSelected() && Inventory.getSelectedItemId() != API.MARRENTILL_NOTED) 
     			{
@@ -35,7 +34,7 @@ public class ExitPortal extends Leaf {
     				Sleep.sleep(10,50);
     			}
     		}
-    		MethodProvider.sleepUntil(()-> Locations.rimmington.contains(p.l), Sleep.Calculate(5000,1111));
+    		org.dreambot.api.utilities.Sleep.sleepUntil(()-> Locations.rimmington.contains(p.l), Sleep.calculate(5000,1111));
     		Sleep.sleep(55,555);
     	}
     	return 5;

@@ -19,6 +19,6 @@ public class TimeoutLeaf extends Leaf
 
     @Override
     public int onLoop() {
-        return Sleep.Calculate(111,420);
+        return Sleep.calculate(111,420);
     }
 }

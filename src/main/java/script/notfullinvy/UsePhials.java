@@ -1,6 +1,5 @@
 package script.notfullinvy;
 
-import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.dialogues.Dialogues;
 import org.dreambot.api.methods.input.Keyboard;
@@ -49,7 +48,7 @@ public class UsePhials extends Leaf {
     		//have at least one option to exchange items, check for "all" and if none, choose "1"
     		Main.currentTask = "~Typing options~";
     		if(!Dialogues.chooseFirstOptionContaining("Exchange All:")) Keyboard.type("1",false);
-    		return Sleep.Calculate(420,696);
+    		return Sleep.calculate(420,696);
     	}
     	//check if Phials nearby
     	NPC phials = NPCs.closest("Phials");
@@ -61,7 +60,7 @@ public class UsePhials extends Leaf {
         		Item marrentillNoted = Inventory.get(API.MARRENTILL_NOTED);
         		if(marrentillNoted.useOn(phials))
     			{
-    				MethodProvider.sleepUntil(Dialogues::inDialogue, () -> p.l.isMoving(), Sleep.Calculate(2222,2222), 50);
+    				org.dreambot.api.utilities.Sleep.sleepUntil(Dialogues::inDialogue, () -> p.l.isMoving(), Sleep.calculate(2222,2222), 50);
     			}
     		}
     	}

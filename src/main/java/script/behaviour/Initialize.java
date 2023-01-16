@@ -2,9 +2,9 @@ package script.behaviour;
 
 import java.time.LocalTime;
 
-import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.container.impl.bank.Bank;
 import org.dreambot.api.methods.widget.Widgets;
+import org.dreambot.api.utilities.Logger;
 
 import script.p;
 import script.framework.Leaf;
@@ -41,7 +41,7 @@ public class Initialize extends Leaf {
     	Sleep.initSleepMod = Sleep.initSleepMod * Sleep.initSleepMod;
     	//all initial randomizations that depend on new random seed go here
     	API.initialized = true;
-    	MethodProvider.log("Initialized");
+    	Logger.log("Initialized");
         return 5;
     }
 }

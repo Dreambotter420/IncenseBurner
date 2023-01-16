@@ -2,7 +2,6 @@ package script.utilities;
 
 import java.time.LocalDateTime;
 
-import org.dreambot.api.methods.MethodProvider;
 public class Sleep {
 	public static LocalDateTime dt;
 	public static double initSleepMod;
@@ -12,10 +11,10 @@ public class Sleep {
 		 * and this new dynamic modifier changes over time - all bots change speed over time the same, applied to initial modifier
 		 * based on current minute of the hour (0-59)
 		 */
-		MethodProvider.sleep(Calculate(min,max));
+		org.dreambot.api.utilities.Sleep.sleep(calculate(min,max));
 		return;
 	}
-	public static int Calculate(int min, int max) {
+	public static int calculate(int min, int max) {
 		int minute = dt.getMinute();
 		double sleepMod = initSleepMod * ((Math.sin((4 / 14) * minute) + 2 - 
 				((1 / 2) * Math.sin(((4  / 25) * minute * minute) - 30))) / 4);

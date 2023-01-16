@@ -16,7 +16,7 @@ public class p extends Leaf{
 	@Override
 	public int onLoop() {
 		l = Players.getLocal();
-		return Sleep.Calculate(69,111);
+		return Sleep.calculate(69,111);
 	}
 	
 }
